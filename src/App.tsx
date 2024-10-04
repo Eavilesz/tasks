@@ -106,7 +106,7 @@ const App: React.FC = () => {
     (result: any) => {
       if (!result.destination) return;
 
-      const { source, destination } = result;
+      const { destination } = result;
       const task = tasks.find((t) => t.id.toString() === result.draggableId);
 
       if (task) {
