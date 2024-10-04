@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "types": [
+      "@testing-library/jest-dom",
+      "@types/jest"
+      // Add other types if needed
+    ],
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
