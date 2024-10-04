@@ -1,9 +1,9 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Task, GroupBy, Filter } from '../types/index.tsx';
+import { useTaskContext } from '../context/TaskContext.tsx';
 
 interface KanbanBoardProps {
-  tasks: Task[];
   groupBy: GroupBy;
   filter: Filter;
   onEditTask: (task: Task) => void;
@@ -15,7 +15,6 @@ interface KanbanBoardProps {
 }
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({
-  tasks,
   groupBy,
   filter,
   onEditTask,
@@ -25,6 +24,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onChangePage,
   onDragEnd,
 }) => {
+  const { tasks } = useTaskContext();
   const filteredTasks = tasks.filter((task) => {
     if (
       filter.search &&

@@ -1,15 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
 import KanbanBoard from './components/KanbanBoard';
 import AddTaskModal from './components/AddTaskModal';
 import EditTaskModal from './components/EditTaskModal';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import { Task, GroupBy, Filter } from './types';
+import { TaskProvider, useTaskContext } from './context/TaskContext';
 
-const API_URL = 'https://tasks-manager-test.fly.dev/api/tasks';
-
-const App: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+const AppContent: React.FC = () => {
+  const {
+    tasks,
+    loading,
+    addTask,
+    updateTask,
+    deleteTask,
+    handleUndo,
+    handleRedo,
+  } = useTaskContext();
   const [groupBy, setGroupBy] = useState<GroupBy>('state');
   const [filter, setFilter] = useState<Filter>({});
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
@@ -18,89 +25,6 @@ const App: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [undoStack, setUndoStack] = useState<Task[][]>([]);
-  const [redoStack, setRedoStack] = useState<Task[][]>([]);
-
-  useEffect(() => {
-    fetchTasks();
-  }, [redoStack]);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      setTasks(data);
-      setUndoStack([...undoStack, data]); // Keeping the actual tasks states in memmory for undo action
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
-
-  const addTask = async (newTask: Omit<Task, 'id' | 'created_at'>) => {
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTask),
-      });
-      const data = await response.json();
-      setTasks([...tasks, data]);
-      setUndoStack([...undoStack, [...tasks, data]]);
-      setRedoStack([]);
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
-  };
-
-  const updateTask = async (updatedTask: Task) => {
-    try {
-      const response = await fetch(`${API_URL}/${updatedTask.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedTask),
-      });
-      const data = await response.json();
-      const newTasks = tasks.map((task) => (task.id === data.id ? data : task));
-      setTasks(newTasks);
-      setUndoStack([...undoStack, newTasks]);
-      setRedoStack([]);
-    } catch (error) {
-      console.error('Error updating task:', error);
-    }
-  };
-
-  const deleteTask = async (id: number) => {
-    try {
-      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      const newTasks = tasks.filter((task) => task.id !== id);
-      setTasks(newTasks);
-      setUndoStack([...undoStack, newTasks]);
-      setRedoStack([]);
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
-  };
-
-  const handleUndo = () => {
-    if (undoStack.length > 1) {
-      const newUndo = [...undoStack];
-      // taking the last element only
-      const lastState = newUndo.pop()!;
-      setRedoStack([...redoStack, lastState]);
-      setUndoStack(newUndo);
-      setTasks(newUndo[newUndo.length - 1]);
-    }
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length > 0) {
-      const newRedo = [...redoStack];
-      const nextState = newRedo.pop()!;
-      setUndoStack([...undoStack, nextState]);
-      setRedoStack(newRedo);
-      setTasks(nextState);
-    }
-  };
 
   const handleDragEnd = useCallback(
     (result: any) => {
@@ -124,6 +48,10 @@ const App: React.FC = () => {
     [tasks, groupBy, updateTask]
   );
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header
@@ -138,7 +66,6 @@ const App: React.FC = () => {
         onDeleteSelected={() => setIsDeleteModalOpen(true)}
       />
       <KanbanBoard
-        tasks={tasks}
         groupBy={groupBy}
         filter={filter}
         onEditTask={(task) => {
@@ -193,6 +120,14 @@ const App: React.FC = () => {
         />
       )}
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <TaskProvider>
+      <AppContent />
+    </TaskProvider>
   );
 };
 
