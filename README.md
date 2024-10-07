@@ -5,3 +5,9 @@
 ```
 npm test
 ```
+
+### Coverage test
+
+```
+pnpm test -- --coverage
+```
