@@ -4,6 +4,7 @@ import KanbanBoard from './components/KanbanBoard';
 import AddTaskModal from './components/AddTaskModal';
 import EditTaskModal from './components/EditTaskModal';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
+import { LoadingModal } from './components/LoadingModal';
 import { Task, GroupBy, Filter } from './types';
 import { TaskProvider, useTaskContext } from './context/TaskContext';
 import { AuthProvider, useAuthContext } from './context/AuthContext';
@@ -52,7 +53,7 @@ const AppContent: React.FC = () => {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   const handleDeleteClick = () => {
