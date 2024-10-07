@@ -24,4 +24,16 @@ describe('Header Component', () => {
     expect(screen.getByText('Task Manager')).toBeInTheDocument();
     expect(screen.getByText('Add Task')).toBeInTheDocument();
   });
+
+  it('calls onAddTask when Add Task button is clicked', () => {
+    render(
+      <TaskProvider>
+        <Header {...mockProps} />
+      </TaskProvider>
+    );
+
+    const addButton = screen.getByText('Add Task');
+    addButton.click();
+    expect(mockProps.onAddTask).toHaveBeenCalled();
+  });
 });

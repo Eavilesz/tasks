@@ -58,4 +58,19 @@ describe('KanbanBoard Component', () => {
     expect(screen.getByText('Next')).toBeInTheDocument();
     expect(screen.getByText('Previous')).toBeInTheDocument();
   });
+
+  it('calls onChangePage when pagination button is clicked', () => {
+    render(
+      <TaskProvider>
+        <KanbanBoard {...mockProps} />
+      </TaskProvider>
+    );
+
+    const nextButton = screen.getByText('Next');
+
+    nextButton.click();
+    expect(mockProps.onChangePage).toHaveBeenCalledWith(
+      mockProps.currentPage + 1
+    );
+  });
 });
