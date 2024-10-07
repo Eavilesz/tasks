@@ -20,8 +20,6 @@ const Header: React.FC<HeaderProps> = ({
   groupBy,
   setGroupBy,
   onAddTask,
-  onUndo,
-  onRedo,
   selectedTasks,
   onDeleteSelected,
 }) => {
@@ -74,18 +72,6 @@ const Header: React.FC<HeaderProps> = ({
             <option value="priority">Group by Priority</option>
             <option value="date">Group by Date</option>
           </select>
-          <button
-            onClick={onUndo}
-            className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
-          >
-            Undo
-          </button>
-          <button
-            onClick={onRedo}
-            className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
-          >
-            Redo
-          </button>
           <button
             onClick={onAddTask}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"

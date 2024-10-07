@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Header from './Header';
 import { TaskProvider } from '../context/TaskContext';
+import { AuthProvider } from '../context/AuthContext';
 
 describe('Header Component', () => {
   const mockProps = {
@@ -17,9 +18,11 @@ describe('Header Component', () => {
 
   it('renders without crashing', () => {
     render(
-      <TaskProvider>
-        <Header {...mockProps} />
-      </TaskProvider>
+      <AuthProvider>
+        <TaskProvider>
+          <Header {...mockProps} />
+        </TaskProvider>
+      </AuthProvider>
     );
     expect(screen.getByText('Task Manager')).toBeInTheDocument();
     expect(screen.getByText('Add Task')).toBeInTheDocument();
@@ -27,9 +30,11 @@ describe('Header Component', () => {
 
   it('calls onAddTask when Add Task button is clicked', () => {
     render(
-      <TaskProvider>
-        <Header {...mockProps} />
-      </TaskProvider>
+      <AuthProvider>
+        <TaskProvider>
+          <Header {...mockProps} />
+        </TaskProvider>
+      </AuthProvider>
     );
 
     const addButton = screen.getByText('Add Task');
