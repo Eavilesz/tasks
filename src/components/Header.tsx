@@ -1,5 +1,6 @@
 import React from 'react';
 import { Filter, GroupBy } from '../types';
+import { useAuthContext } from '../context/AuthContext';
 
 interface HeaderProps {
   filter: Filter;
@@ -24,6 +25,8 @@ const Header: React.FC<HeaderProps> = ({
   selectedTasks,
   onDeleteSelected,
 }) => {
+  const { user, logout } = useAuthContext();
+
   return (
     <header className="bg-white shadow-md p-4">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
@@ -95,6 +98,14 @@ const Header: React.FC<HeaderProps> = ({
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
             >
               Delete Selected
+            </button>
+          )}
+          {user && (
+            <button
+              onClick={logout}
+              className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+            >
+              Logout
             </button>
           )}
         </div>

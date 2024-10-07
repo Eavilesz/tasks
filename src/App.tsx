@@ -6,6 +6,7 @@ import EditTaskModal from './components/EditTaskModal';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import { Task, GroupBy, Filter } from './types';
 import { TaskProvider, useTaskContext } from './context/TaskContext';
+import { AuthProvider, useAuthContext } from './context/AuthContext';
 
 const AppContent: React.FC = () => {
   const {
@@ -17,6 +18,8 @@ const AppContent: React.FC = () => {
     handleUndo,
     handleRedo,
   } = useTaskContext();
+
+  const { user, login } = useAuthContext();
   const [groupBy, setGroupBy] = useState<GroupBy>('state');
   const [filter, setFilter] = useState<Filter>({});
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
@@ -52,6 +55,15 @@ const AppContent: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const handleDeleteClick = () => {
+    if (user) {
+      setIsDeleteModalOpen(true);
+    } else {
+      alert('You need to be logged in to delete this!');
+      login();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header
@@ -63,7 +75,7 @@ const AppContent: React.FC = () => {
         onUndo={handleUndo}
         onRedo={handleRedo}
         selectedTasks={selectedTasks}
-        onDeleteSelected={() => setIsDeleteModalOpen(true)}
+        onDeleteSelected={handleDeleteClick}
       />
       <KanbanBoard
         groupBy={groupBy}
@@ -99,7 +111,7 @@ const AppContent: React.FC = () => {
           }}
           onUpdateTask={updateTask}
           onDeleteTask={() => {
-            setIsDeleteModalOpen(true);
+            handleDeleteClick();
             setIsEditModalOpen(false);
           }}
         />
@@ -125,9 +137,11 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <TaskProvider>
-      <AppContent />
-    </TaskProvider>
+    <AuthProvider>
+      <TaskProvider>
+        <AppContent />
+      </TaskProvider>
+    </AuthProvider>
   );
 };
 

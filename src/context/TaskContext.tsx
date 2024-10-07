@@ -54,7 +54,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks]);
+  }, [redoStack]);
 
   const addTask = async (newTask: Omit<Task, 'id' | 'created_at'>) => {
     try {
