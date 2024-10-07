@@ -62,11 +62,13 @@ const Header: React.FC<HeaderProps> = ({
             value={filter.date || ''}
             onChange={(e) => setFilter({ ...filter, date: e.target.value })}
             className="border rounded px-2 py-1"
+            data-testid="date-input"
           />
           <select
             value={groupBy}
             onChange={(e) => setGroupBy(e.target.value as GroupBy)}
             className="border rounded px-2 py-1"
+            data-testid="group-by-input"
           >
             <option value="state">Group by State</option>
             <option value="priority">Group by Priority</option>
