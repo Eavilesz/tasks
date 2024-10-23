@@ -12,12 +12,12 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyDZeRmSNR69pjDl0kH7oP1JP_5Eto3_EMU',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: 'tasks-71c4c.firebaseapp.com',
   projectId: 'tasks-71c4c',
   storageBucket: 'tasks-71c4c.appspot.com',
   messagingSenderId: '597780712043',
-  appId: '1:597780712043:web:183a349b62bb4db2537f2e',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: 'G-ZSZZ186LQC',
 };
 
